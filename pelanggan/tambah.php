@@ -45,8 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 } else {
                     $pesan = "Data gagal disimpan. Silakan periksa kembali.";
                 }
+
                 $jenis_pesan = "error";
             }
+
             mysqli_stmt_close($stmt);
         } else {
             $pesan = "Terjadi kesalahan saat menyiapkan penyimpanan data.";
@@ -57,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 function e($val) { return htmlspecialchars((string)($val ?? ""), ENT_QUOTES, "UTF-8"); }
 ?>
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

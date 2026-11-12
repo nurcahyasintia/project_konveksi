@@ -9,6 +9,8 @@ $base_path   = '../';
 $active_page = 'pesanan';
 // ==========================================
 
+require_once "../config/database.php";
+
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $error = "";
 

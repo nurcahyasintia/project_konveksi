@@ -55,6 +55,89 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 function e($value) {
     return htmlspecialchars((string)($value ?? ""), ENT_QUOTES, "UTF-8");
 }
+function e($value) {
+    return htmlspecialchars((string)($value ?? ""), ENT_QUOTES, "UTF-8");
+}
+
+$errors = [];
+$kode = "";
+$nama = "";
+$jabatan = "";
+$divisi = "";
+$tanggalMasuk = date("Y-m-d");
+$status = "Aktif";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $kode = trim($_POST["kode"] ?? "");
+    $nama = trim($_POST["nama"] ?? "");
+    $jabatan = trim($_POST["jabatan"] ?? "");
+    $divisi = trim($_POST["divisi"] ?? "");
+    $tanggalMasuk = trim($_POST["tanggal_masuk"] ?? "");
+    $status = trim($_POST["status"] ?? "Aktif");
+
+    if ($kode === "" || $nama === "" || $jabatan === "" || $divisi === "" || $tanggalMasuk === "") {
+        $errors[] = "Semua kolom wajib diisi.";
+    }
+
+    if (!in_array($status, ["Aktif", "Cuti", "Nonaktif"], true)) {
+        $errors[] = "Status karyawan tidak valid.";
+    }
+
+    $date = DateTime::createFromFormat("!Y-m-d", $tanggalMasuk);
+    if (!$date || $date->format("Y-m-d") !== $tanggalMasuk) {
+        $errors[] = "Tanggal masuk tidak valid.";
+    }
+
+    if (!$errors) {
+        // Pastikan kode karyawan belum digunakan.
+        $cek = $conn->prepare("SELECT id FROM employees WHERE kode = ? LIMIT 1");
+        $cek->bind_param("s", $kode);
+        $cek->execute();
+        $sudahAda = $cek->get_result()->fetch_assoc();
+        $cek->close();
+
+        if ($sudahAda) {
+            $errors[] = "Kode karyawan sudah digunakan. Gunakan kode yang berbeda.";
+        } else {
+            $stmt = $conn->prepare(
+                "INSERT INTO employees (kode, nama, jabatan, divisi, tanggal_masuk, status)
+                 VALUES (?, ?, ?, ?, ?, ?)"
+            );
+
+            $stmt->bind_param(
+                "ssssss",
+                $kode, $nama, $jabatan, $divisi, $tanggalMasuk, $status
+            );
+
+            if ($stmt->execute()) {
+                $employeeId = $conn->insert_id;
+                $stmt->close();
+
+                // Catat aktivitas jika tabel activity_logs tersedia.
+                $userId = (int) $_SESSION["user_id"];
+                $aktivitas = "Menambahkan data karyawan";
+                $referensi = "Employee ID: " . $employeeId;
+
+                $log = $conn->prepare(
+                    "INSERT INTO activity_logs (user_id, aktivitas, referensi, waktu)
+                     VALUES (?, ?, ?, NOW())"
+                );
+
+                if ($log) {
+                    $log->bind_param("iss", $userId, $aktivitas, $referensi);
+                    $log->execute();
+                    $log->close();
+                }
+
+                header("Location: index.php?pesan=berhasil_tambah");
+                exit;
+            } else {
+                $errors[] = "Gagal menyimpan data. Pastikan kolom database sesuai dengan form ini.";
+                $stmt->close();
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

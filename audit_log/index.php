@@ -12,14 +12,16 @@ $base_path   = '../';
 $active_page = 'audit_log'; 
 // ==========================================
 
+// Audit log biasanya hanya boleh dilihat oleh Admin dan Owner
+requireRole(['Admin', 'Owner']);
+
+// Ambil data log dari database, diurutkan dari yang terbaru
 $query = "SELECT activity_logs.id, activity_logs.aktivitas, activity_logs.referensi, activity_logs.waktu, users.nama 
           FROM activity_logs 
           LEFT JOIN users ON activity_logs.user_id = users.id 
           ORDER BY activity_logs.id DESC 
-          LIMIT 100";
+          LIMIT 100"; // Tampilkan 100 log terbaru
 $logs = $conn->query($query);
-
-function e($val) { return htmlspecialchars((string)($val ?? ""), ENT_QUOTES, "UTF-8"); }
 ?>
 <!DOCTYPE html>
 <html lang="id">

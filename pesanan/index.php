@@ -83,6 +83,7 @@ function amanPesanan($nilai) {
         <header class="topbar">
             <div>
                 <h1>Data Pesanan</h1>
+<<<<<<< HEAD
                 <div class="breadcrumb">Dashboard / <span>Pesanan</span></div>
             </div>
             <div class="topbar-label"><i class="fa-solid fa-circle-check"></i> Sistem Konveksi</div>
@@ -129,12 +130,172 @@ function amanPesanan($nilai) {
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr><td colspan="10" class="empty-data"><i class="fa-solid fa-inbox"></i>Belum ada data pesanan.</td></tr>
+=======
+                <div class="breadcrumb">
+                    Dashboard / <span>Pesanan</span>
+                </div>
+            </div>
+
+            <div class="topbar-label">
+                <i class="fa-solid fa-circle-check"></i>
+                Sistem Konveksi
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Data Pesanan</h2>
+                    <p>Kelola semua pesanan pelanggan konveksi.</p>
+                </div>
+
+                <a href="tambah.php" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i>
+                    Tambah Pesanan
+                </a>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <div>
+                    <p>Total Pesanan</p>
+                    <h3><?= $total_pesanan; ?></h3>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <i class="fa-solid fa-list"></i>
+                    Daftar Pesanan
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nomor Pesanan</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Tanggal</th>
+                                <th>Deadline</th>
+                                <th>Total</th>
+                                <th>DP</th>
+                                <th>Status Pembayaran</th>
+                                <th>Status Produksi</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        <?php if ($total_pesanan > 0): ?>
+                            <?php $no = 1; ?>
+
+                            <?php while ($row = mysqli_fetch_assoc($query)): ?>
+                                <?php
+                                $status_pembayaran = $row['status_pembayaran'] ?? 'belum_lunas';
+                                $status_produksi = $row['status_produksi'] ?? 'menunggu';
+
+                                $kelas_pembayaran = str_replace('_', '-', $status_pembayaran);
+                                ?>
+
+                                <tr>
+                                    <td><?= $no++; ?></td>
+
+                                    <td class="order-number">
+                                        <?= amanPesanan($row['nomor_order']); ?>
+                                    </td>
+
+                                    <td>
+                                        <?= amanPesanan($row['nama_pelanggan']); ?>
+                                    </td>
+
+                                    <td><?= amanPesanan($row['tanggal']); ?></td>
+
+                                    <td><?= amanPesanan($row['deadline']); ?></td>
+
+                                    <td>
+                                        Rp <?= number_format(
+                                            (float) ($row['total'] ?? 0),
+                                            0,
+                                            ',',
+                                            '.'
+                                        ); ?>
+                                    </td>
+
+                                    <td>
+                                        Rp <?= number_format(
+                                            (float) ($row['dp'] ?? 0),
+                                            0,
+                                            ',',
+                                            '.'
+                                        ); ?>
+                                    </td>
+
+                                    <td>
+                                        <span class="status status-<?= amanPesanan($kelas_pembayaran); ?>">
+                                            <?= amanPesanan(labelStatusPembayaranPesanan($status_pembayaran)); ?>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status status-<?= amanPesanan($status_produksi); ?>">
+                                            <?= amanPesanan(labelStatusProduksiPesanan($status_produksi)); ?>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a
+                                                href="edit.php?id=<?= (int) $row['id']; ?>"
+                                                class="btn btn-edit"
+                                                title="Edit pesanan"
+                                                aria-label="Edit pesanan">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a
+                                                href="hapus.php?id=<?= (int) $row['id']; ?>"
+                                                class="btn btn-delete"
+                                                title="Hapus pesanan"
+                                                aria-label="Hapus pesanan"
+                                                onclick="return confirm('Yakin ingin menghapus pesanan ini?')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="10" class="empty-data">
+                                    <i class="fa-solid fa-inbox"></i>
+                                    <p style="margin-top: 10px;">
+                                        Belum ada data pesanan.
+                                    </p>
+                                </td>
+                            </tr>
+>>>>>>> 1b9e4f250cf15fee5e3c59f7646a32305589883b
                         <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+<<<<<<< HEAD
             <a href="../index.php" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+=======
+
+            <div class="back-button">
+                <a href="../index.php" class="btn btn-secondary">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Kembali ke Dashboard
+                </a>
+            </div>
+
+>>>>>>> 1b9e4f250cf15fee5e3c59f7646a32305589883b
         </section>
     </main>
 </div>

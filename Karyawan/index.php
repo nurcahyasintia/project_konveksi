@@ -320,6 +320,8 @@ tbody tr:last-child td { border-bottom: none; }
             <!-- ===== FILTER ===== -->
             <form method="GET" class="filter-bar">
                 <input class="filter-input" type="search" name="cari" placeholder="Cari karyawan..." value="<?= e($cari) ?>">
+                <input class="filter-input" type="search" name="cari"
+                       placeholder="Cari karyawan..." value="<?= e($cari) ?>">
                 <select class="filter-select" name="divisi">
                     <option value="">Semua Divisi</option>
                     <?php while ($d = $divisiResult->fetch_assoc()): ?>
@@ -392,10 +394,15 @@ tbody tr:last-child td { border-bottom: none; }
                                 <td><span class="badge <?= $statusClass ?>"><?= e($row["status"]) ?></span></td>
                                 <td>
                                     <div class="aksi-group">
-                                        <a class="btn btn-outline btn-sm" href="edit.php?id=<?= (int)$row["id"] ?>"><i class="fas fa-edit"></i> Edit</a>
-                                        <form method="POST" action="hapus.php" onsubmit="return confirm('Yakin ingin menghapus data karyawan ini?')">
+                                        <a class="btn btn-outline btn-sm" href="edit.php?id=<?= (int)$row["id"] ?>">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form method="POST" action="hapus.php"
+                                              onsubmit="return confirm('Yakin ingin menghapus data karyawan ini?')">
                                             <input type="hidden" name="id" value="<?= (int)$row["id"] ?>">
-                                            <button class="btn btn-danger btn-sm" type="submit"><i class="fas fa-trash"></i> Hapus</button>
+                                            <button class="btn btn-danger btn-sm" type="submit">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
